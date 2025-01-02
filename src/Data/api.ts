@@ -1,9 +1,27 @@
+import { useLocalStorage } from '../Components/shared/useLocalStorage';
 import { Movie } from '../Models/Movie';
 import axios from 'axios';
 
 //DENNA SKA GÖMMAS SENARE
 const apiKey = 'acd6ce9ab6f292e227b895f58ded1c5f';
 
+export const getRequestToken = async (): Promise<string> => {
+  // const { getItem: localToken, setItem: setLocalToken } = useLocalStorage('requestToken');
+  const response = await axios.get(`https://api.themoviedb.org/3/authentication/token/new?api_key=${apiKey}`);
+  console.log('Token från apiet', response.data.request_token);
+  return response.data.request_token;
+};
+
+export const postSessionId = async (requestToken: string | undefined): Promise<string | undefined> => {
+  const response = await axios.post(`https://api.themoviedb.org/3/authentication/session/new?api_key=${apiKey}&request_token=${requestToken}`);
+  console.log('PostSession', response.data.session_id);
+  return response.data.session_id;
+};
+
+export const deleteSessionId = async (sessionId: string | undefined): Promise<string | undefined> => {
+  const response = await axios.delete(`https://api.themoviedb.org/3/authentication/session?api_key=${apiKey}&session_id=${sessionId}`);
+  return response.data.results;
+};
 //Endpoint for discover movies
 export const getMovies = async (): Promise<Movie[]> => {
   const response = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}`);

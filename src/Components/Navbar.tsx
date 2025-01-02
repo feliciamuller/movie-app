@@ -1,13 +1,11 @@
 import { Toolbar, Box, Typography, Autocomplete, TextField } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
-import SearchMovies from './SearchMovies';
+import { Link, NavLink } from 'react-router-dom';
 import popcornLogo from '../Images/popcorn-time-netflix-download-300x300.png';
 import SelectedMovie from './SelectedMovie';
 import { useQuery } from '@tanstack/react-query';
 import { getMoviesOnSearch, getMoviesOnSearchById } from '../Data/api';
 import { useState } from 'react';
 import { Movie } from '../Models/Movie';
-import SearchResults from './SearchResults';
 
 export const useFetchSearchMovies = (query: string | undefined) => {
   return useQuery({
@@ -28,8 +26,6 @@ export const useGetMoviesById = (query: number) => {
 export default function Navbar() {
   const [userInput, setUserInput] = useState<string | undefined>();
   const [filteredMovies, setFilteredMovies] = useState<Movie[]>();
-  const [selectedMovie, setSelectedMovie] = useState<Movie | null>();
-  const [selectedMovieId, setSelectedMovieId] = useState<number>();
 
   const { data: movie } = useFetchSearchMovies(userInput); // använder userInput för att söka i queryn
   // const { data: movieId } = useGetMoviesById(id);
@@ -52,7 +48,6 @@ export default function Navbar() {
     setUserInput(input);
     setFilteredMovies(userInputMovies);
   };
-  console.log('userinput', userInput); // även denna måste nollas
 
   const handleLinkClick = () => {
     setFilteredMovies([]); // Nollställ när en länk klickas
@@ -61,26 +56,33 @@ export default function Navbar() {
 
   return (
     <>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          mb: 1,
+        }}
+      >
         <Box sx={{ display: 'inline-flex' }}>
           <Toolbar
             sx={{
               justifyContent: 'space-between',
             }}
           >
-            <Box sx={{ display: 'inline-flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box sx={{ display: 'inline-flex', justifyContent: 'space-between', alignItems: 'center', gap: '20px' }}>
               <Box>
                 <img src={popcornLogo} width='70px' height='auto' alt='movie-logo' />
               </Box>
-              <Link className='links' to='/' onClick={handleLinkClick}>
-                <Typography variant='h6'>Home</Typography>
-              </Link>
-              <Link className='links' to='/topRatedMovies' onClick={handleLinkClick}>
-                <Typography variant='h6'>Top rated</Typography>
-              </Link>
-              <Link className='links' to='/myLikedMovies' onClick={handleLinkClick}>
-                <Typography variant='h6'>My liked movies</Typography>
-              </Link>
+              <NavLink className={({ isActive }) => (isActive ? 'active' : 'notActive')} to='/home' onClick={handleLinkClick}>
+                <Typography variant='h5'>Home</Typography>
+              </NavLink>
+              <NavLink className={({ isActive }) => (isActive ? 'active' : 'notActive')} to='/topRated' onClick={handleLinkClick}>
+                <Typography variant='h5'>Top rated</Typography>
+              </NavLink>
+              <NavLink className={({ isActive }) => (isActive ? 'active' : 'notActive')} to='/myFavourites' onClick={handleLinkClick}>
+                <Typography variant='h5'>Liked movies</Typography>
+              </NavLink>
             </Box>
           </Toolbar>
         </Box>

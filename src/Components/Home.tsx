@@ -5,6 +5,8 @@ import { Box, Button, Modal, Paper, Typography } from '@mui/material';
 import { useState } from 'react';
 import { Movie } from '../Models/Movie';
 import Grid from '@mui/material/Grid2';
+import errorImage from '../Images/gallery_slash_icon_244286.png';
+import DescriptionModal from './shared/DescriptionModal';
 
 const useFetchMovies = () => {
   return useQuery({
@@ -27,9 +29,16 @@ export default function Home() {
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>();
   const [selectedMovieId, setSelectedMovieId] = useState<number | null>();
 
-  const handleOpen = (movieId: number) => {
+  const handleClick = (movieId: number) => {
     setSelectedMovieId(movieId);
     const selected = popularMovies?.find((movie) => movie.id === movieId);
+    setSelectedMovie(selected);
+    setOpen(true);
+  };
+
+  const handleClickUpComing = (movieId: number) => {
+    setSelectedMovieId(movieId);
+    const selected = movie?.find((movie) => movie.id === movieId);
     setSelectedMovie(selected);
     setOpen(true);
   };
@@ -48,11 +57,10 @@ export default function Home() {
   }
   const topFivePopular = popularMovies?.slice(0, 5);
 
-  //SKULLE BEHÖVA FIXA RESPONSIVITET PÅ CAROUSEL, LÄGGA TILL GRID ITEMS
   return (
     <Box
       sx={{
-        bgcolor: 'background.light',
+        bgcolor: 'background.dark',
         display: 'flex',
         flexDirection: 'column',
         borderColor: 'background.border',
@@ -72,11 +80,23 @@ export default function Home() {
         }}
       >
         <div style={{ width: '100%' }}>
-          <Typography variant='h4' component='h4' style={{ textAlign: 'center', textShadow: '#5b5b66 1px 0 10px' }}>
+          <Typography variant='h4' component='h4' style={{ textAlign: 'center' }}>
             Upcoming movies
           </Typography>
-          <Grid container spacing={2} justifyContent='center'>
-            <Carousel indicators={false} style={{ display: 'flex', flexDirection: 'row', gap: '15px', justifyContent: 'center', width: '100%' }}>
+          <Grid container justifyContent='center'>
+            <Carousel
+              className='custom-carousel'
+              indicators={false}
+              nextIcon={<span className='carousel-control-next-icon' />}
+              prevIcon={<span className='carousel-control-prev-icon' />}
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: '15px',
+                justifyContent: 'center',
+                width: '100%',
+              }}
+            >
               {groupedMovies.map((group, index) => (
                 <Carousel.Item key={index}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', gap: '15px' }}>
@@ -92,16 +112,21 @@ export default function Home() {
                           alignItems: 'center',
                           justifyContent: 'space-between',
                           marginBottom: 2,
+                          marginTop: 2,
+                          ':hover': {
+                            boxShadow: '0 2px 10px rgba(255, 255, 255, 0.5)',
+                            transform: 'scale(1.05)',
+                            transition: 'ease-in-out 0.3s',
+                          },
                         }}
                       >
-                        <img
-                          className='movieImages'
-                          src={movieItem.poster_path ? `https://image.tmdb.org/t/p/w500${movieItem.poster_path}` : '20200505_noimage.png'}
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = '20200505_noimage.png';
-                          }}
-                          alt={movieItem.title}
-                        />
+                        <Button onClick={() => handleClickUpComing(movieItem.id)} style={{ borderRadius: '8px', padding: 0 }}>
+                          <img
+                            src={movieItem.poster_path ? `https://image.tmdb.org/t/p/w500${movieItem.poster_path}` : errorImage}
+                            alt={movieItem.title}
+                            style={{ width: '100%', height: '100%', borderRadius: '8px' }}
+                          />
+                        </Button>
                         <Typography variant='h6' component='h6'>
                           Released: {movieItem.release_date}
                         </Typography>
@@ -127,8 +152,8 @@ export default function Home() {
         }}
       >
         <div style={{ width: '100%' }}>
-          <Typography variant='h4' component='h4' style={{ textAlign: 'center', textShadow: '#5b5b66 1px 0 10px' }}>
-            Popular right now
+          <Typography variant='h4' component='h4' style={{ textAlign: 'center' }}>
+            Popular
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'row', gap: '15px', justifyContent: 'center' }}>
             {topFivePopular?.map((movie) => (
@@ -142,6 +167,7 @@ export default function Home() {
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: 'transparent',
+                    marginTop: 2,
                     ':hover': {
                       boxShadow: '0 2px 10px rgba(255, 255, 255, 0.5)',
                       transform: 'scale(1.05)',
@@ -149,9 +175,9 @@ export default function Home() {
                     },
                   }}
                 >
-                  <Button onClick={() => handleOpen(movie.id)} style={{ borderRadius: '8px', padding: 0 }}>
+                  <Button onClick={() => handleClick(movie.id)} style={{ borderRadius: '8px', padding: 0 }}>
                     <img
-                      src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : '20200505_noimage.png'}
+                      src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : errorImage}
                       alt={movie.title}
                       style={{ width: '100%', height: '100%', borderRadius: '8px' }}
                     />
@@ -159,30 +185,7 @@ export default function Home() {
                 </Paper>
               </div>
             ))}
-            <Modal open={open} onClose={handleClose}>
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: 400,
-                  bgcolor: 'background.light',
-                  padding: 4,
-                  textAlign: 'center',
-                  borderRadius: '8px',
-                }}
-              >
-                {selectedMovie && (
-                  <>
-                    <Typography variant='h6' component='h2'>
-                      {selectedMovie.title}
-                    </Typography>
-                    <Typography sx={{ mt: 2 }}>{selectedMovie.overview}</Typography>
-                  </>
-                )}
-              </Box>
-            </Modal>
+            <DescriptionModal selected={selectedMovie} modalOpen={open} setModalClosed={handleClose} />
           </Box>
         </div>
       </Box>

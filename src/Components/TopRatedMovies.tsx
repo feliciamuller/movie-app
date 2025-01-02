@@ -6,7 +6,7 @@ import Grid from '@mui/material/Grid2';
 import { useLocalStorage } from './shared/useLocalStorage';
 import Heart from 'react-heart';
 import errorImage from '../Images/gallery_slash_icon_244286.png';
-import { Box, Button, Pagination, Rating, Typography } from '@mui/material';
+import { Box, Pagination, Rating, Typography } from '@mui/material';
 import StarBorderIcon from '@mui/icons-material/Star';
 
 export const useFetchTopRated = (query: number | undefined) => {
@@ -20,7 +20,6 @@ export const useFetchTopRated = (query: number | undefined) => {
 export default function TopRatedMovies() {
   const [likedMovies, setLikedMovies] = useState<Movie[]>([]); //här finns alla gillade filmer
   const [userInputPage, setUserInputPage] = useState<number | undefined>(1); //lär ska börja med 1 eftersom första sidan ska visas som default
-  const [rating, setRating] = useState<number | undefined>(0); // behöver sätta så
   const [ratedMovies, setRatedMovies] = useState<Movie[]>([]);
 
   const { setItem: setLikedLocalStorage, getItem: getLikedLocalStorage } = useLocalStorage('likedMovies');
@@ -29,8 +28,6 @@ export default function TopRatedMovies() {
   const getItemRefLiked = useRef(getLikedLocalStorage);
   const getItemRefRated = useRef(getRatedLocalStorage);
 
-  console.log('rated i localstorage', ratedMovies); // detta blir senaste ratingen, typeof number. skillnaden mot likedMovies är att den sparar hela objektet inte bara liked
-
   const { data: movie } = useFetchTopRated(userInputPage);
 
   useEffect(() => {
@@ -38,10 +35,10 @@ export default function TopRatedMovies() {
     if (savedLikedMovies) {
       setLikedMovies(savedLikedMovies);
     }
-
+    // Hämta sparade betygsatta filmer från localStorage
     const savedRatedMovies = getItemRefRated.current();
     if (savedRatedMovies) {
-      setRatedMovies(savedRatedMovies); //blir senaste ratingen i siffra bara
+      setRatedMovies(savedRatedMovies);
     }
   }, []);
 
@@ -62,25 +59,24 @@ export default function TopRatedMovies() {
     });
   };
 
-  console.log('ratingen', rating);
-  //RATING SPARAS INTE PÅ MOVIE
-  const handleRating = (input: number, id: number) => {
-    console.log('ID', id);
-    console.log(
-      'Movie',
-      movie?.some((item) => item.id === id),
-    );
+  const handleRating = (movie: Movie, newRating: number) => {
+    setRatedMovies((prev) => {
+      const existingMovie = prev.find((item) => item.id === movie.id);
+      let updatedRatedMovies;
+      if (existingMovie) {
+        updatedRatedMovies = prev.map((item) => (item.id === movie.id ? { ...item, rating: newRating } : item));
+      } else {
+        updatedRatedMovies = [...prev, { ...movie, rating: newRating }];
+      }
 
-    let ratingOnMovie;
-
-    if (movie?.some((item) => item.id === id)) {
-      console.log('Rating sätts');
-      setRating(input);
-      setRatedLocalStorage(input);
-    } else {
-      console.log('Rating sattes inte');
-    }
+      setRatedLocalStorage(updatedRatedMovies);
+      return updatedRatedMovies;
+    });
   };
+  const moviesWithRating = movie?.map((movie) => {
+    const ratedMovie = ratedMovies.find((item) => item.id === movie.id);
+    return { ...movie, rating: ratedMovie?.rating ?? 0 }; // Lägg till rating om det finns, annars sätt till 0
+  });
   return (
     <Box>
       <Box
@@ -91,16 +87,14 @@ export default function TopRatedMovies() {
         }}
       >
         <Box sx={{ width: '100%', padding: 2 }}>
-          <Typography variant='h4' component='h4' style={{ textAlign: 'center', textShadow: '#5b5b66 1px 0 10px' }}>
+          <Typography variant='h4' component='h4' style={{ textAlign: 'center' }}>
             Top rated
           </Typography>
         </Box>
         <Grid container spacing={2} justifyContent='center'>
-          {movie?.map((mov) => {
+          {moviesWithRating?.map((mov) => {
             const isLiked = likedMovies.some((item) => item.id === mov.id); //denna fungerar och isLiked innehåller rätt film som är gillad
-
-            console.log('ratedmovies', ratedMovies); // blir bara siffan på ratingen
-            // console.log('Rating', rating);
+            const currentRating = ratedMovies.find((item) => item.id === mov.id)?.rating ?? 0; // Hämta det aktuella betyget, eller sätt till 0 om inget betyg finns
             return (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
@@ -116,7 +110,6 @@ export default function TopRatedMovies() {
               >
                 <Box
                   sx={{
-                    bgcolor: 'background.light',
                     borderColor: 'background.border',
                     borderStyle: 'solid',
                     borderWidth: '1px',
@@ -129,7 +122,7 @@ export default function TopRatedMovies() {
                     display: 'flex',
                     flexDirection: 'column',
                     flexWrap: 'wrap',
-                    backgroundColor: 'background.default',
+                    backgroundColor: 'background.dark',
                   }}
                 >
                   <img
@@ -191,9 +184,9 @@ export default function TopRatedMovies() {
                     <Rating
                       sx={{ color: '#f3ce13' }}
                       name='simple-controlled'
-                      value={mov.rating} //är 0 första renderingen
-                      onChange={(e, rating) => handleRating(rating, mov.id)}
-                      emptyIcon={<StarBorderIcon style={{ color: '#1e1e22' }} fontSize='inherit' />}
+                      value={currentRating}
+                      onChange={(e, rating) => handleRating(mov, rating ?? 0)}
+                      emptyIcon={<StarBorderIcon style={{ color: '#1E1E20' }} fontSize='inherit' />}
                     />
                     <Typography variant='body1' component='p' sx={{ color: '#f3ce13', width: '100%', textAlign: 'center' }}>
                       <strong>IMDb: {Math.round(mov.vote_average * 10) / 10}</strong>

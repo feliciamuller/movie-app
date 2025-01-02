@@ -10,6 +10,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './Components/shared/theme';
 import MyLikedMovies from './Components/MyLikedMovies';
 import DefaultSearchPage from './Components/DefaultSearchPage';
+import { Box } from '@mui/material';
 
 const queryClient = new QueryClient();
 
@@ -19,13 +20,16 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools />
         <Router>
-          <Navbar />
-          <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/topRatedMovies' element={<TopRatedMovies />} />
-            <Route path='/myLikedMovies' element={<MyLikedMovies />} />
-            <Route path='/search' element={<DefaultSearchPage />} />
-          </Routes>
+          <Box>
+            <Navbar />
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='/home' element={<Home />} />
+              <Route path='/topRated' element={<TopRatedMovies />} />
+              <Route path='/myFavourites' element={<MyLikedMovies />} />
+              <Route path='/search' element={<DefaultSearchPage />} />
+            </Routes>
+          </Box>
         </Router>
       </QueryClientProvider>
     </ThemeProvider>

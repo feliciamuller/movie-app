@@ -5,8 +5,10 @@
 
 :root {
   --primary-color: #ECDFCC;
+  --primary-dark: #b9afa2;
   --secondary-color: #a89f90;
   --background-default: #3e3e46;
+  --background-dark: #2E2E36;
   --background-paper: #606068;
 }
 
@@ -16,20 +18,32 @@ html, body {
   font-family: 'Josefin Sans', cursive !important;
   background-color: var(--background-default) !important;
   color: var(--primary-color) !important;
-  background: linear-gradient(to bottom, #1e1e22, var(--background-default)) !important;
+  /* background: linear-gradient(to bottom, #1e1e22, var(--background-default)) !important; */
   min-height: 100vh;
 }
 body {
   padding: 10px;
 }
 
-.links{
+/* .links{
   text-decoration: none;
-  color: var(--primary-color);
+  color: var(--primary-dark);
   padding: 10px;
 }
-.links:hover{
-  color: var(--background-paper)
+.links:hover, :focus{
+  color: var(--primary-light);
+} */
+
+.active {
+  padding: 10px; 
+  text-decoration: none;
+  color: var(--primary-light); 
+}
+
+.notActive{  
+  text-decoration: none;
+  color: var(--primary-dark);
+  padding: 10px;  
 }
 
 .movieDetails{
@@ -61,3 +75,13 @@ body {
   color: var(--primary-color);
   background-color: var(--background-default);
 }
+
+.custom-carousel .carousel-control-prev{
+justify-content: left;
+width: auto;
+}
+
+ .custom-carousel .carousel-control-next{
+  justify-content: right;
+  width: auto;
+ }

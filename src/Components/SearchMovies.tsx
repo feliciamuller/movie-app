@@ -1,11 +1,8 @@
-import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getMoviesOnSearch, getMoviesOnSearchById } from '../Data/api';
-import { Autocomplete, Box, Button, Modal, Paper, TextField, Typography } from '@mui/material';
-import SelectedMovie from './SelectedMovie';
+import { Autocomplete, Box, TextField } from '@mui/material';
 import { Movie } from '../Models/Movie';
-import errorImage from '../Images/gallery_slash_icon_244286.png';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 export const useFetchSearchMovies = (query: string | undefined) => {
   return useQuery({
@@ -27,9 +24,6 @@ export const useGetMoviesById = (query: number) => {
 export default function SearchMovies() {
   const [userInput, setUserInput] = useState<string | undefined>();
   const [filteredMovies, setFilteredMovies] = useState<Movie[]>();
-  const [open, setOpen] = useState(false);
-  const [selectedMovie, setSelectedMovie] = useState<Movie | null>();
-  const [selectedMovieId, setSelectedMovieId] = useState<number>();
 
   const { data: movie } = useFetchSearchMovies(userInput); // använder userInput för att söka i queryn
   // const { data: movieId } = useGetMoviesById(id);
@@ -40,7 +34,6 @@ export default function SearchMovies() {
 
   const handleSearch = (input: string) => {
     const userInputMovies = movie?.filter((movie) => movie.title.toLowerCase().includes(input.toLowerCase()));
-    console.log('Filtrerad', filteredMovies);
     setUserInput(input);
     setFilteredMovies(userInputMovies);
   };
@@ -48,7 +41,6 @@ export default function SearchMovies() {
   const handleOnInputChange = (input: string) => {
     //här tas det man skriver in
     const userInputMovies = movie?.filter((movie) => movie.title.toLowerCase().includes(input.toLowerCase()));
-    console.log('Filtrerad', filteredMovies);
     setUserInput(input);
     setFilteredMovies(userInputMovies);
   };

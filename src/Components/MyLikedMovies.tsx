@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Movie } from '../Models/Movie';
 import { useLocalStorage } from './shared/useLocalStorage';
 import { Box, Button, Modal, Paper, Typography } from '@mui/material';
+import errorImage from '../Images/gallery_slash_icon_244286.png';
+import DescriptionModal from './shared/DescriptionModal';
 
 export default function MyLikedMovies() {
   const [likedMovies, setLikedMovies] = useState<Movie[]>([]); //här finns alla gillade filmer
@@ -15,7 +17,7 @@ export default function MyLikedMovies() {
     setLikedMovies(getItem); //sätter likedMovies till det som är sparat i localstorage
   }, []);
 
-  const handleOpen = (movieId: number) => {
+  const handleClick = (movieId: number) => {
     setSelectedMovieId(movieId);
     const selected = likedMovies?.find((movie) => movie.id === movieId);
     setSelectedMovie(selected);
@@ -31,7 +33,7 @@ export default function MyLikedMovies() {
   return (
     <Box
       sx={{
-        bgcolor: 'background.light',
+        bgcolor: 'background.dark',
         borderColor: 'background.border',
         borderStyle: 'solid',
         borderWidth: '1px',
@@ -39,12 +41,8 @@ export default function MyLikedMovies() {
         boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)',
       }}
     >
-      <Typography
-        variant='h4'
-        component='h4'
-        sx={{ textAlign: 'center', marginTop: 2, marginLeft: 2, marginRight: 2, textShadow: '#5b5b66 1px 0 10px' }}
-      >
-        Mina favoriter
+      <Typography variant='h4' component='h4' sx={{ textAlign: 'center', marginTop: 2, marginLeft: 2, marginRight: 2 }}>
+        My favourite movies
       </Typography>
       <Box
         sx={{
@@ -76,9 +74,9 @@ export default function MyLikedMovies() {
                 },
               }}
             >
-              <Button onClick={() => handleOpen(movie.id)} style={{ borderRadius: '8px', padding: 0 }}>
+              <Button onClick={() => handleClick(movie.id)} style={{ borderRadius: '8px', padding: 0 }}>
                 <img
-                  src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : '20200505_noimage.png'}
+                  src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : errorImage}
                   alt={movie.title}
                   style={{
                     width: '100%',
@@ -91,30 +89,7 @@ export default function MyLikedMovies() {
             </Paper>
           </div>
         ))}
-        <Modal open={open} onClose={handleClose}>
-          <Box
-            sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: 400,
-              bgcolor: 'background.light',
-              padding: 4,
-              textAlign: 'center',
-              borderRadius: '8px',
-            }}
-          >
-            {selectedMovie && (
-              <>
-                <Typography variant='h6' component='h2'>
-                  {selectedMovie.title}
-                </Typography>
-                <Typography sx={{ mt: 2 }}>{selectedMovie.overview}</Typography>
-              </>
-            )}
-          </Box>
-        </Modal>
+        <DescriptionModal selected={selectedMovie} modalOpen={open} setModalClosed={handleClose} />
       </Box>
     </Box>
   );

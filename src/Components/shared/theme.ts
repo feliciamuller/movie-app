@@ -14,7 +14,7 @@ export const theme = createTheme({
     background: <TypeBackground>{
       default: '#3e3e46', //mörk lila/grå
       paper: '#606068', //ljusare lila/grå
-      light: '#2E2E36', // lite ljusare nyans av default
+      dark: '#2E2E36', // mörkare nyans av default
       border: '#27272E',
     },
   },
