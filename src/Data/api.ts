@@ -2,8 +2,7 @@ import { useLocalStorage } from '../Components/shared/useLocalStorage';
 import { Movie } from '../Models/Movie';
 import axios from 'axios';
 
-//DENNA SKA GÖMMAS SENARE
-const apiKey = 'acd6ce9ab6f292e227b895f58ded1c5f';
+const apiKey = import.meta.env.VITE_API_KEY;
 
 export const getRequestToken = async (): Promise<string> => {
   // const { getItem: localToken, setItem: setLocalToken } = useLocalStorage('requestToken');
