@@ -5,7 +5,6 @@ import axios from 'axios';
 const apiKey = import.meta.env.VITE_API_KEY;
 
 export const getRequestToken = async (): Promise<string> => {
-  // const { getItem: localToken, setItem: setLocalToken } = useLocalStorage('requestToken');
   const response = await axios.get(`https://api.themoviedb.org/3/authentication/token/new?api_key=${apiKey}`);
   console.log('Token från apiet', response.data.request_token);
   return response.data.request_token;
