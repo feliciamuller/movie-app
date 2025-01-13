@@ -18,24 +18,13 @@ html, body {
   font-family: 'Josefin Sans', cursive !important;
   background-color: var(--background-default) !important;
   color: var(--primary-color) !important;
-  /* background: linear-gradient(to bottom, #1e1e22, var(--background-default)) !important; */
   min-height: 100vh;
 }
 body {
   padding: 10px;
 }
 
-/* .links{
-  text-decoration: none;
-  color: var(--primary-dark);
-  padding: 10px;
-}
-.links:hover, :focus{
-  color: var(--primary-light);
-} */
-
 .active {
-  padding: 10px; 
   text-decoration: none;
   color: var(--primary-light); 
 }
@@ -43,7 +32,6 @@ body {
 .notActive{  
   text-decoration: none;
   color: var(--primary-dark);
-  padding: 10px;  
 }
 
 .movieDetails{
@@ -76,6 +64,14 @@ body {
   background-color: var(--background-default);
 }
 
+.custom-carousel {
+  transition: none !important;
+}
+
+.carousel-item .active .MuiPaper-root {
+  transition: none !important;
+  background-color: aqua;
+}
 .custom-carousel .carousel-control-prev{
 justify-content: left;
 width: auto;

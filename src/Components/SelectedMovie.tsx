@@ -1,5 +1,5 @@
 import errorImage from '../Images/gallery_slash_icon_244286.png';
-import { Box, Button, Modal, Typography, Paper } from '@mui/material';
+import { Box, Button, Paper } from '@mui/material';
 import { useState } from 'react';
 import { Movie } from '../Models/Movie';
 import { useQuery } from '@tanstack/react-query';
@@ -20,18 +20,14 @@ export const useFetchMoviesById = (query: number | undefined) => {
 };
 
 export default function SelectedMovie(props: SelectedMovieProps) {
-  // const { selected } = useParams<{ selected: string }>(); // behöver kolla upp denna
   const { searchedMovie, input } = props;
   const [open, setOpen] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>();
-  const [selectedMovieId, setSelectedMovieId] = useState<number>();
 
   const handleClick = (movieId: number) => {
-    setSelectedMovieId(movieId);
     const selected = searchedMovie?.find((movie) => movie.id === movieId);
     setSelectedMovie(selected);
     setOpen(true);
-    //här borde jag anropa get by id för att kunna visa beskrivning av filmen
   };
 
   const handleClose = () => {

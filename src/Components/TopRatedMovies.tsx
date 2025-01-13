@@ -16,10 +16,10 @@ export const useFetchTopRated = (query: number | undefined) => {
     enabled: !!query,
   });
 };
-//HÄR SKA ALLA FILMER VISAS OCH DETALJER OM FILMEN
+
 export default function TopRatedMovies() {
   const [likedMovies, setLikedMovies] = useState<Movie[]>([]); //här finns alla gillade filmer
-  const [userInputPage, setUserInputPage] = useState<number | undefined>(1); //lär ska börja med 1 eftersom första sidan ska visas som default
+  const [userInputPage, setUserInputPage] = useState<number | undefined>(1);
   const [ratedMovies, setRatedMovies] = useState<Movie[]>([]);
 
   const { setItem: setLikedLocalStorage, getItem: getLikedLocalStorage } = useLocalStorage('likedMovies');
@@ -93,8 +93,8 @@ export default function TopRatedMovies() {
         </Box>
         <Grid container spacing={2} justifyContent='center'>
           {moviesWithRating?.map((mov) => {
-            const isLiked = likedMovies.some((item) => item.id === mov.id); //denna fungerar och isLiked innehåller rätt film som är gillad
-            const currentRating = ratedMovies.find((item) => item.id === mov.id)?.rating ?? 0; // Hämta det aktuella betyget, eller sätt till 0 om inget betyg finns
+            const isLiked = likedMovies.some((item) => item.id === mov.id);
+            const currentRating = ratedMovies.find((item) => item.id === mov.id)?.rating ?? 0;
             return (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
@@ -143,7 +143,6 @@ export default function TopRatedMovies() {
                       flexDirection: 'row',
                       width: '100%',
                       alignItems: 'flex-start',
-                      // height: '80px',
                       mb: 2,
                       mt: 2,
                     }}
@@ -185,7 +184,7 @@ export default function TopRatedMovies() {
                       sx={{ color: '#f3ce13' }}
                       name='simple-controlled'
                       value={currentRating}
-                      onChange={(e, rating) => handleRating(mov, rating ?? 0)}
+                      onChange={(_e, rating) => handleRating(mov, rating ?? 0)}
                       emptyIcon={<StarBorderIcon style={{ color: '#1E1E20' }} fontSize='inherit' />}
                     />
                     <Typography variant='body1' component='p' sx={{ color: '#f3ce13', width: '100%', textAlign: 'center' }}>
@@ -203,7 +202,7 @@ export default function TopRatedMovies() {
         <Pagination
           color='primary'
           count={10}
-          onChange={(e, page) => {
+          onChange={(_e, page) => {
             if (page) {
               setUserInputPage(page);
               window.scrollTo({

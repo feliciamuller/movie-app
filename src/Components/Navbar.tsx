@@ -28,10 +28,9 @@ export default function Navbar() {
   const [filteredMovies, setFilteredMovies] = useState<Movie[]>();
 
   const { data: movie } = useFetchSearchMovies(userInput); // använder userInput för att söka i queryn
-  // const { data: movieId } = useGetMoviesById(id);
 
   const options = movie
-    ? [...new Set(movie.map((mov) => mov.title))] // Ta bort dubbletter
+    ? [...new Set(movie.map((mov) => mov.title))] // tar bort dubbletter
     : [];
 
   const handleSearch = (input: string) => {
@@ -50,8 +49,8 @@ export default function Navbar() {
   };
 
   const handleLinkClick = () => {
-    setFilteredMovies([]); // Nollställ när en länk klickas
-    setUserInput(''); // Nollställ användarens input
+    setFilteredMovies([]);
+    setUserInput('');
   };
 
   return (
@@ -94,15 +93,14 @@ export default function Navbar() {
                 id='movieSearch'
                 freeSolo
                 options={options}
-                onInputChange={(e, newInputValue) => {
+                onInputChange={(_e, newInputValue) => {
                   handleOnInputChange(newInputValue);
                 }}
-                onChange={(e, userInput) => {
+                onChange={(_e, userInput) => {
                   if (userInput) {
                     handleSearch(userInput);
                   }
                 }}
-                // måste ta bort underlinen som dyker upp när man skriver
                 renderInput={(params) => (
                   <TextField
                     sx={{ backgroundColor: 'primary.main', borderRadius: '8px' }}

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Movie } from '../Models/Movie';
 import { useLocalStorage } from './shared/useLocalStorage';
-import { Box, Button, Modal, Paper, Typography } from '@mui/material';
+import { Box, Button, Paper, Typography } from '@mui/material';
 import errorImage from '../Images/gallery_slash_icon_244286.png';
 import DescriptionModal from './shared/DescriptionModal';
 
@@ -9,16 +9,16 @@ export default function MyLikedMovies() {
   const [likedMovies, setLikedMovies] = useState<Movie[]>([]); //här finns alla gillade filmer
   const [open, setOpen] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>();
-  const [selectedMovieId, setSelectedMovieId] = useState<number | null>();
+  // const [selectedMovieId, setSelectedMovieId] = useState<number | null>();
 
   const { getItem } = useLocalStorage('likedMovies');
 
   useEffect(() => {
     setLikedMovies(getItem); //sätter likedMovies till det som är sparat i localstorage
-  }, []);
+  }, [getItem]);
 
   const handleClick = (movieId: number) => {
-    setSelectedMovieId(movieId);
+    // setSelectedMovieId(movieId);
     const selected = likedMovies?.find((movie) => movie.id === movieId);
     setSelectedMovie(selected);
     setOpen(true);
@@ -26,7 +26,7 @@ export default function MyLikedMovies() {
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedMovieId(null);
+    // setSelectedMovieId(null);
     setSelectedMovie(null);
   };
 

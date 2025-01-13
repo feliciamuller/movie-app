@@ -1,4 +1,3 @@
-import { useLocalStorage } from '../Components/shared/useLocalStorage';
 import { Movie } from '../Models/Movie';
 import axios from 'axios';
 

@@ -1,5 +1,4 @@
 import { Box, Modal, Typography } from '@mui/material';
-import { useState } from 'react';
 import { Movie } from '../../Models/Movie';
 
 type DescriptionModalProps = {

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { getPopularMovies, getUpcomingMovies } from '../Data/api';
 import Carousel from 'react-bootstrap/Carousel';
-import { Box, Button, Modal, Paper, Typography } from '@mui/material';
+import { Box, Button, Paper, Typography } from '@mui/material';
 import { useState } from 'react';
 import { Movie } from '../Models/Movie';
 import Grid from '@mui/material/Grid2';
@@ -27,17 +27,14 @@ export default function Home() {
   const { data: popularMovies } = useFetchPopularMovies();
   const [open, setOpen] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>();
-  const [selectedMovieId, setSelectedMovieId] = useState<number | null>();
 
   const handleClick = (movieId: number) => {
-    setSelectedMovieId(movieId);
     const selected = popularMovies?.find((movie) => movie.id === movieId);
     setSelectedMovie(selected);
     setOpen(true);
   };
 
   const handleClickUpComing = (movieId: number) => {
-    setSelectedMovieId(movieId);
     const selected = movie?.find((movie) => movie.id === movieId);
     setSelectedMovie(selected);
     setOpen(true);
@@ -45,7 +42,6 @@ export default function Home() {
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedMovieId(null);
     setSelectedMovie(null);
   };
 

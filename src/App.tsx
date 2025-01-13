@@ -23,7 +23,7 @@ function App() {
           <Box>
             <Navbar />
             <Routes>
-              <Route path='/' element={<Home />} />
+              <Route path='/movie-app/' element={<Home />} />
               <Route path='/home' element={<Home />} />
               <Route path='/topRated' element={<TopRatedMovies />} />
               <Route path='/myFavourites' element={<MyLikedMovies />} />
